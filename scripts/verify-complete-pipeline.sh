@@ -33,7 +33,7 @@ done
 wait
 echo "   ✓ Traffic generated"
 
-# Wait for processing
+# Wait for processing...
 echo ""
 echo "4. Waiting for processing (5 seconds)..."
 sleep 5
