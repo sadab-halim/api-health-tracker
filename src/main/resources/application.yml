@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: api-health-tracker
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/api_health  # Changed port to 5433
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+  mail:
+    host: localhost
+    port: 1025
+
+
+
+  server:
+    port: 8000
+
+  logging:
+    level:
+      root: INFO
+      com.healthtracker: DEBUG
+      org.apache.kafka: WARN
+      org.hibernate.SQL: WARN
+
+# Kafka Topics Configuration
+kafka:
+  topics:
+    api-metrics:
+      name: api-metrics
+      partitions: 3
+      replication-factor: 1
+  consumer:
+    group-id: api-health-tracker-consumer
