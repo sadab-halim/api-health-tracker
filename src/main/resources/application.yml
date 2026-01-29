@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: api-health-tracker
@@ -28,8 +31,8 @@ spring:
         order_inserts: true
         order_updates: true
 
-flyway:
-  enabled: false  # Disabled - we manage schema manually
+  flyway:
+    enabled: false
 
   kafka:
     bootstrap-servers: localhost:9092
