@@ -3,13 +3,16 @@ spring:
     name: api-health-tracker
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/api_health  # Changed port to 5433
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/api_health_tracker
+    username: health_user
+    password: health_password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -18,36 +21,39 @@ spring:
     show-sql: false
     properties:
       hibernate:
+        format_sql: true
+        use_sql_comments: false
         jdbc:
-          batch_size: 50
+          batch_size: 100
         order_inserts: true
         order_updates: true
 
+flyway:
+  enabled: false  # Disabled - we manage schema manually
+
   kafka:
     bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+      retries: 3
+      properties:
+        linger.ms: 10
+        batch.size: 16384
+        compression.type: lz4
+        enable.idempotence: true
+    consumer:
+      group-id: metrics-consumer-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      max-poll-records: 500
+      properties:
+        spring.json.trusted.packages: com.healthtracker.domain.model
 
-  mail:
-    host: localhost
-    port: 1025
-
-
-
-  server:
-    port: 8000
-
-  logging:
-    level:
-      root: INFO
-      com.healthtracker: DEBUG
-      org.apache.kafka: WARN
-      org.hibernate.SQL: WARN
-
-# Kafka Topics Configuration
-kafka:
-  topics:
-    api-metrics:
-      name: api-metrics
-      partitions: 3
-      replication-factor: 1
-  consumer:
-    group-id: api-health-tracker-consumer
+logging:
+  level:
+    com.healthtracker: DEBUG
+    org.springframework.kafka: INFO
+    org.hibernate.SQL: DEBUG
