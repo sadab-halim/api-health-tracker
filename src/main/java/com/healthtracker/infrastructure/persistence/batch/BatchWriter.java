@@ -1,7 +1,7 @@
 package com.healthtracker.infrastructure.persistence.batch;
 
 import com.healthtracker.domain.model.ApiMetric;
-import com.healthtracker.domain.repository.ApiMetricRepository;
+import com.healthtracker.domain.repository.ApiMetricsRepository;
 import com.healthtracker.infrastructure.kafka.producer.ApiMetricEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,9 @@ public class BatchWriter {
 
     private static final Logger log = LoggerFactory.getLogger(BatchWriter.class);
 
-    private final ApiMetricRepository apiMetricRepository;
+    private final ApiMetricsRepository apiMetricRepository;
 
-    public BatchWriter(ApiMetricRepository apiMetricRepository) {
+    public BatchWriter(ApiMetricsRepository apiMetricRepository) {
         this.apiMetricRepository = apiMetricRepository;
     }
 
